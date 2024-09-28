@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>React getting started</title>
+</head>
+
+<body>
+    <!-- Root container for react components -->
+    <div id="root"></div>
+
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/babel-standalone@6.26.0/babel.min.js"></script>
+
+    <script type="text/babel">
+
+
+
+        function AgeForm() {
+
+            const [name, setName] = React.useState({ Name: '', Age: '' });
+            const [answer, setAnswer] = React.useState('');
+
+            const handleChange = (event) => {
+                setName({ ...name, [event.target.name]: event.target.value });
+            }
+
+            const handleSubmit = (event) => {
+                if (name.Age >= 18) {
+                    setAnswer("Hello "+ name.Name);
+                } else {
+                    setAnswer("You are too young");
+                }
+                event.preventDefault(); // ignores the default action 
+                // Do something with form data
+            }
+
+            return (
+                <div>
+                    <p> {answer} </p>
+                    <form onSubmit={handleSubmit}>
+
+                        <label> Name: </label>
+                        <input type="text" name="Name" onChange={handleChange} value={name.Name} /><br />
+                        <label> Age: </label>
+                        <input type="text" name="Age" onChange={handleChange} value={name.Age} /><br />
+                        <input type="submit" value="Submit" />
+
+                    </form>
+
+                </div>
+
+            );
+
+        };
+
+
+        const root = ReactDOM.createRoot(document.getElementById("root"));
+        root.render(<div><AgeForm /></div>)
+    </script>
+</body>
+
+</html>

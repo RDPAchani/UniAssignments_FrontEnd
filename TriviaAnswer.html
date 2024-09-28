@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Front End Programming / React</title>
+</head>
+
+<body>
+    <!-- We will put our React component inside this div. -->
+    <div id="root"></div>
+
+    <!-- Load React & Babel -->
+    <!-- Note: when deploying, replace "development.js" with "production.min.js". -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/babel-standalone@6.26.0/babel.min.js"></script>
+
+    <!-- React component code -->
+    <script type="text/babel">
+
+
+        function TriviaApp() {
+
+            const [question, setQuestion] = React.useState({});
+            const [showAnswer, setShowAnswer] = React.useState(false);
+
+            const fetchTriviaQuestion = () => {
+
+                fetch('https://opentdb.com/api.php?amount=1')
+
+                    .then(response => {
+                        if (!response.ok)
+                            throw new Error("Error in fetch: " + response.statusText);
+
+                        return response.json();
+                    })
+
+
+                    .then(data => {
+                        setQuestion(data.results[0])
+                        setShowAnswer(false);
+                    })
+                    .catch(err => console.error(err));
+
+            };
+
+            React.useEffect(() => { fetchTriviaQuestion(); }, []);
+
+            const handleShowAnswer = () => {
+                setShowAnswer(true);
+            };
+
+            return (
+                <React.Fragment>
+
+                    <p>{question.question}</p>
+                    <button onClick={fetchTriviaQuestion} > New Question </button>
+                    <button onClick={handleShowAnswer} > Show Answer </button>
+                    {showAnswer && <p>Answer: {question.correct_answer}</p>}
+                </React.Fragment>
+            );
+        }
+
+
+        const root = ReactDOM.createRoot(document.getElementById("root"));
+        root.render(<TriviaApp />)
+    </script>
+</body>
+
+</html>

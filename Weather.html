@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Front End Programming / React</title>
+</head>
+
+<body>
+    <!-- We will put our React component inside this div. -->
+    <div id="root"></div>
+
+    <!-- Load React & Babel -->
+    <!-- Note: when deploying, replace "development.js" with "production.min.js". -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/babel-standalone@6.26.0/babel.min.js"></script>
+
+    <!-- React component code -->
+    <script type="text/babel">
+
+
+        function WeatherApp() {
+
+            const [weather, setWeather] = React.useState(null);
+          
+
+            const fetchWeatherData = () => {
+
+                fetch('https://api.openweathermap.org/data/2.5/weather?q=London%20&APPID=c809def351db51d45d918115a3df6a9c')
+
+                    .then(response => {
+                        if (!response.ok)
+                            throw new Error("Error in fetch: " + response.statusText);
+
+                        return response.json();
+                    })
+
+
+                    .then(data => 
+                        setWeather(data))
+                    .catch(err => console.error(err));
+
+            };
+
+            React.useEffect(() => { fetchWeatherData(); }, []);
+
+            if (weather=== null){
+                return(<p> Loading....</p>);
+            }else { 
+
+                const  temperatureCelsius = (weather.main.temp -273.15).toFixed(1);
+
+            return (
+                <React.Fragment>
+
+                    <p>Temperature: {temperatureCelsius} Celsius</p>
+                    <p>Weather: {weather.weather[0].description}</p>
+                    <img src= {`https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`}/>
+                </React.Fragment>
+            );
+            }
+        }
+
+
+        const root = ReactDOM.createRoot(document.getElementById("root"));
+        root.render(<WeatherApp />)
+    </script>
+</body>
+
+</html>
